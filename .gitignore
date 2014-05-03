@@ -1,1 +1,4 @@
 #QT IGNORES
+
+*.pro
+*.pro.user
