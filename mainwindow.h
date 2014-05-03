@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTextEdit>
+
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +18,23 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    void createMenu();
+
+private:
+    //Ui::MainWindow *ui;
+
+    // Widgets:
+    QTextEdit *textEdit;
+
+    // settings/menu:
+    QAction *saveAction;
+    QAction *loadAction;
+    QAction *quitAction;
+
+private slots:
+    void save();
+    void load();
+    void quit();
 };
 
 #endif // MAINWINDOW_H
