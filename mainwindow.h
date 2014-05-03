@@ -3,7 +3,10 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
-
+#include <QVBoxLayout>
+#include <QMessageBox>
+#include <QGroupBox>
+#include <QComboBox>
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +22,17 @@ public:
 
 private:
     void createMenu();
+    QGroupBox* createAlgorithmBox();
+    QGroupBox* createCalibrationBox();
+    QGroupBox* createMouseBox();
 
 private:
     //Ui::MainWindow *ui;
 
     // Widgets:
-    QTextEdit *textEdit;
+    QPushButton *startButton;
+    QPushButton *stopButton;
+    QComboBox *camerasCombo;
 
     // settings/menu:
     QAction *saveAction;
@@ -35,6 +43,10 @@ private slots:
     void save();
     void load();
     void quit();
+
+    //buttons
+    void start();
+    void stop();
 };
 
 #endif // MAINWINDOW_H
