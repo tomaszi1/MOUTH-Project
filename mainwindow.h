@@ -29,6 +29,10 @@ private:
     QGroupBox* createCalibrationBox();
     QGroupBox* createMouseBox();
     void initiateTimer();
+    void cleanUp();
+
+    // overriden methods
+    void closeEvent(QCloseEvent *event);
 
 private:
     //Ui::MainWindow *ui;
@@ -49,6 +53,7 @@ private:
     // camera access
     Camera *camera;
 
+    // dispatches video from camera to listeners
     VideoDispatcher *dispatcher;
 
 private slots:

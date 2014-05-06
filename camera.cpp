@@ -6,6 +6,7 @@ using namespace cv;
 
 Camera::Camera()
 {
+    currectCameraIndex = 0;
     currentCamera.open(0);
     if(!currentCamera.isOpened())
         throw "No camera detected!";
@@ -34,4 +35,9 @@ bool Camera::isOpened(){
 
 void Camera::close(){
     currentCamera.release();
+}
+
+Camera* Camera::getInstance(){
+    static Camera instance;
+    return &instance;
 }

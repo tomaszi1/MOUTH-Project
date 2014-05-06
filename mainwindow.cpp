@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QTimer>
+#include <QCloseEvent>
 
 // Constructor:
 //*********************************************************************************************************************
@@ -20,15 +21,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     createMenu();
 
     // main layout:
-    QWidget *centralWidget = new QWidget;
+    QWidget *centralWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout;
     centralWidget->setLayout(mainLayout);
     // ui->setupUi(this);
 
 
     // left box:
-    QWidget *leftBox = new QWidget;
-    QVBoxLayout *leftBoxLayout = new QVBoxLayout;
+    QWidget *leftBox = new QWidget(this);
+    QVBoxLayout *leftBoxLayout = new QVBoxLayout(leftBox);
     leftBox->setLayout(leftBoxLayout);
     leftBox->setStyleSheet("background-color:#e9e9e9;");
 
@@ -60,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
 
-    camera = new Camera;
+    camera = Camera::getInstance();
     initiateTimer();
 }
 
@@ -80,8 +81,8 @@ void MainWindow::createMenu(){
     connect(loadAction, SIGNAL(triggered()), this, SLOT(load()));
     connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
-    QMenuBar *menuBar = new QMenuBar;
-    QMenu *menuFile = new QMenu("File");
+    QMenuBar *menuBar = new QMenuBar(this);
+    QMenu *menuFile = new QMenu("File",menuBar);
     menuBar->addMenu(menuFile);
     menuFile->addAction(saveAction);
     menuFile->addAction(loadAction);
@@ -151,6 +152,14 @@ void MainWindow::initiateTimer(){
     paintTimer->start(1000/DEFAULT_FPS);
 }
 
+void MainWindow::closeEvent(QCloseEvent *event){
+    quit();
+}
+
+void MainWindow::cleanUp(){
+    paintTimer->stop();
+    camera->close();
+}
 
 // Slots:
 //*********************************************************************************************************************
@@ -168,8 +177,10 @@ void MainWindow::quit(){
     messageBox.setText(tr("Do you really want to quit?"));
     messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     messageBox.setDefaultButton(QMessageBox::No);
-    if (messageBox.exec() == QMessageBox::Yes)
+    if (messageBox.exec() == QMessageBox::Yes){
+        cleanUp();
         qApp->quit();
+    }
 }
 
 // butons:

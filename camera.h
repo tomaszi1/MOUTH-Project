@@ -9,13 +9,14 @@ using namespace cv;
 class Camera
 {
 public:
-    Camera();
+    static Camera* getInstance();
     Mat* read();
     bool switchCamera();
     bool isOpened();
     void close();
 
 private:
+    Camera();
     VideoCapture currentCamera;
     int currectCameraIndex;
 
