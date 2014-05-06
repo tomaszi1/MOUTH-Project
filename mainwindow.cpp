@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "camera.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -9,6 +10,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QTimer>
 
 // Constructor:
 //*********************************************************************************************************************
@@ -43,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     //right box:
     QWidget *rightBox = new QWidget;
     QVBoxLayout *rightBoxLayout = new QVBoxLayout;
+    QLabel *videoBox = new QLabel;
+    videoBox->setText("Video stream window");
+    videoBox->setFixedSize(640,480);
+    rightBoxLayout->addWidget(videoBox);
     rightBox->setLayout(rightBoxLayout);
     rightBox->setStyleSheet("background-color:#e9e9e9;");
 
@@ -53,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
+
+    camera = new Camera;
+    initiateTimer();
 }
 
 // Destructor:
@@ -135,6 +144,12 @@ QGroupBox* MainWindow::createMouseBox(){
     return algorithmMouseBox;
 }
 
+void MainWindow::initiateTimer(){
+    paintTimer = new QTimer(this);
+    dispatcher = new VideoDispatcher(camera);
+    connect(paintTimer,SIGNAL(timeout()),dispatcher,SLOT(dispatchFrame()));
+    paintTimer->start(1000/DEFAULT_FPS);
+}
 
 
 // Slots:

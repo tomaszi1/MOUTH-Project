@@ -1,5 +1,5 @@
-#ifndef CAMERA_MANAGER_H
-#define CAMERA_MANAGER_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -21,4 +21,4 @@ private:
 
 };
 
-#endif // CAMERA_MANAGER_H
+#endif // CAMERA_H

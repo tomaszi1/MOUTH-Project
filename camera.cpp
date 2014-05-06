@@ -7,13 +7,13 @@ using namespace cv;
 Camera::Camera()
 {
     currentCamera.open(0);
-    if(currentCamera.isOpened())
-        throw "Kamera niedostepna!";
+    if(!currentCamera.isOpened())
+        throw "No camera detected!";
 }
 
 Mat* Camera::read(){
     Mat* image = new cv::Mat();
-    currentCamera.read(image);
+    currentCamera.read(*image);
     return image;
 }
 
@@ -25,6 +25,7 @@ bool Camera::switchCamera(){
         currentCamera.open(0);
         currectCameraIndex = 0;
     }
+    return currentCamera.isOpened();
 }
 
 bool Camera::isOpened(){

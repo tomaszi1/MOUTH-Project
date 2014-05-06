@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QGroupBox>
 #include <QComboBox>
+#include "camera.h"
+#include "video_dispatch.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +21,14 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    static const int DEFAULT_FPS = 30;
 
 private:
     void createMenu();
     QGroupBox* createAlgorithmBox();
     QGroupBox* createCalibrationBox();
     QGroupBox* createMouseBox();
+    void initiateTimer();
 
 private:
     //Ui::MainWindow *ui;
@@ -39,6 +43,14 @@ private:
     QAction *loadAction;
     QAction *quitAction;
 
+    // invokes painting video frames
+    QTimer *paintTimer;
+
+    // camera access
+    Camera *camera;
+
+    VideoDispatcher *dispatcher;
+
 private slots:
     void save();
     void load();
@@ -47,6 +59,7 @@ private slots:
     //buttons
     void start();
     void stop();
+
 };
 
 #endif // MAINWINDOW_H
