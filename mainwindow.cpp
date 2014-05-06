@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "camera.h"
+#include "videoqlabel.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -45,10 +46,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     //right box:
     QWidget *rightBox = new QWidget;
-    QVBoxLayout *rightBoxLayout = new QVBoxLayout;
-    QLabel *videoBox = new QLabel;
+
+    // video box QLabel
+    VideoQLabel *videoBox = new VideoQLabel(rightBox);
     videoBox->setText("Video stream window");
     videoBox->setFixedSize(640,480);
+
+    QVBoxLayout *rightBoxLayout = new QVBoxLayout;
     rightBoxLayout->addWidget(videoBox);
     rightBox->setLayout(rightBoxLayout);
     rightBox->setStyleSheet("background-color:#e9e9e9;");
@@ -61,7 +65,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
 
-    camera = Camera::getInstance();
+    dispatcher = new VideoDispatcher();
+    dispatcher->attach(videoBox);
     initiateTimer();
 }
 
@@ -147,7 +152,6 @@ QGroupBox* MainWindow::createMouseBox(){
 
 void MainWindow::initiateTimer(){
     paintTimer = new QTimer(this);
-    dispatcher = new VideoDispatcher(camera);
     connect(paintTimer,SIGNAL(timeout()),dispatcher,SLOT(dispatchFrame()));
     paintTimer->start(1000/DEFAULT_FPS);
 }
@@ -158,7 +162,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
 void MainWindow::cleanUp(){
     paintTimer->stop();
-    camera->close();
+    delete dispatcher;
 }
 
 // Slots:
@@ -172,15 +176,15 @@ void MainWindow::load(){
 }
 
 void MainWindow::quit(){
-    QMessageBox messageBox;
-    messageBox.setWindowTitle("Mouth");
-    messageBox.setText(tr("Do you really want to quit?"));
-    messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    messageBox.setDefaultButton(QMessageBox::No);
-    if (messageBox.exec() == QMessageBox::Yes){
+    /*QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Mouth", "Do you really want to quit?",
+                                    QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes){
         cleanUp();
         qApp->quit();
-    }
+    }*/
+    cleanUp();
+    qApp->quit();
 }
 
 // butons:

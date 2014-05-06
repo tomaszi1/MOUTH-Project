@@ -3,8 +3,12 @@
 #include <algorithm>
 #include <opencv2/core/core.hpp>
 
-VideoDispatcher::VideoDispatcher(Camera *camera){
-    this->camera = camera;
+VideoDispatcher::VideoDispatcher(){
+    camera = Camera::getInstance();
+}
+
+VideoDispatcher::~VideoDispatcher(){
+    camera->close();
 }
 
 void VideoDispatcher::attach(VideoReceiver *obs){
@@ -23,6 +27,9 @@ void VideoDispatcher::dispatchFrame(){
     if(frame==NULL || frame->empty())
         return;
 
-    for(unsigned int i=0;i<observers.size();i++)
-        observers[i]->update();
+    for(unsigned int i=0;i<observers.size();i++){
+        Mat* copy = new Mat(*frame);
+        observers[i]->update(copy);
+    }
+    delete frame;
 }

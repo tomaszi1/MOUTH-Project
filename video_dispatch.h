@@ -11,7 +11,8 @@ class VideoDispatcher : public QObject
 {
     Q_OBJECT
 public:
-    VideoDispatcher(Camera *camera);
+    VideoDispatcher();
+    ~VideoDispatcher();
     void attach(VideoReceiver* obs);
     void remove(VideoReceiver* obs);
 public slots:
@@ -22,9 +23,8 @@ private:
 };
 
 class VideoReceiver{
-    VideoDispatcher *observable;
 public:
-    virtual void update() = 0;
+    virtual void update(Mat* frame) = 0;
 };
 
 #endif
