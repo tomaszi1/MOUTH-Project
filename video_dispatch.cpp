@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 VideoDispatcher::VideoDispatcher(){
     camera = Camera::getInstance();
@@ -26,6 +27,8 @@ void VideoDispatcher::dispatchFrame(){
     cv::Mat* frame = camera->read();
     if(frame==NULL || frame->empty())
         return;
+
+    cv::cvtColor(*frame,*frame,CV_BGR2RGB);
 
     for(unsigned int i=0;i<observers.size();i++){
         Mat* copy = new Mat(*frame);

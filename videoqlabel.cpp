@@ -10,4 +10,5 @@ void VideoQLabel::update(Mat *frame){
         return;
     QImage qimage((uchar*)(*frame).data,(*frame).cols,(*frame).rows,(*frame).step,QImage::Format_RGB888);
     setPixmap(QPixmap::fromImage(qimage));
+    delete frame;
 }
