@@ -13,6 +13,7 @@
 #include <QHBoxLayout>
 #include <QTimer>
 #include <QCloseEvent>
+#include <QGridLayout>
 
 // Constructor:
 //*********************************************************************************************************************
@@ -49,10 +50,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // video box QLabel
     VideoQLabel *videoBox = new VideoQLabel(rightBox);
+    videoBox->setActiveClick(true);
     videoBox->setText("Video stream window");
-    videoBox->setFixedSize(640,480);
 
-    QVBoxLayout *rightBoxLayout = new QVBoxLayout;
+    QGridLayout *rightBoxLayout = new QGridLayout;
     rightBoxLayout->addWidget(videoBox);
     rightBox->setLayout(rightBoxLayout);
     rightBox->setStyleSheet("background-color:#e9e9e9;");
@@ -60,7 +61,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // add boxes to main layout:
     mainLayout->addWidget(leftBox,1);
     mainLayout->addWidget(rightBox,3);
-
 
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
