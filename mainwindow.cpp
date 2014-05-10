@@ -1,11 +1,14 @@
 #include "mainwindow.h"
-<<<<<<< HEAD
+
 //#include "ui_mainwindow.h"
-=======
+
+
 #include "ui_mainwindow.h"
 #include "camera.h"
 #include "videoqlabel.h"
->>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
+#include "video_dispatch.h"
+
+
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -15,7 +18,6 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QHBoxLayout>
-<<<<<<< HEAD
 #include <QTabWidget>
 #include <QAction>
 #include <QMenuBar>
@@ -23,11 +25,11 @@
 #include <QWidget>
 #include <QApplication>
 
-=======
+
 #include <QTimer>
 #include <QCloseEvent>
 #include <QGridLayout>
->>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
+
 
 // Constructor:
 //*********************************************************************************************************************
@@ -44,11 +46,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 
     // left box:
-    QWidget *leftBox = new QWidget(this);
+    //**************************************************
+
+
+
+
+    QWidget *leftBox = new QWidget(centralWidget);
     QVBoxLayout *leftBoxLayout = new QVBoxLayout(leftBox);
     leftBox->setLayout(leftBoxLayout);
     leftBox->setStyleSheet("background-color:#e9e9e9;");
-    //createLeftBoxLayout(leftBoxLayout);
+
+
+    createLeftBoxLayout(leftBoxLayout);
 
     QGroupBox *algorithmStartBox = createAlgorithmBox();
     leftBoxLayout->addWidget(algorithmStartBox);
@@ -59,8 +68,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QGroupBox *mouseBox = createMouseBox();
     leftBoxLayout->addWidget(mouseBox);
 
-
     //right box:
+    //**************************************************
     QWidget *rightBox = new QWidget;
 
     // video box QLabel
@@ -175,7 +184,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
     quit();
 }
 
-<<<<<<< HEAD
+
 void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
 
   /*  QTabWidget *tabs = new QtabWidget();
@@ -184,12 +193,12 @@ void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
     QWidget *Calibration = new Qwidget();*/
 }
 
-=======
+
 void MainWindow::cleanUp(){
     paintTimer->stop();
     delete dispatcher;
 }
->>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
+
 
 // Slots:
 //*********************************************************************************************************************
