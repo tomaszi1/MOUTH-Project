@@ -30,8 +30,9 @@ void VideoDispatcher::dispatchFrame(){
 
     cv::cvtColor(*frame,*frame,CV_BGR2RGB);
 
+    cv::Mat* copy;
     for(unsigned int i=0;i<observers.size();i++){
-        Mat* copy = new Mat(*frame);
+        copy = new Mat(*frame);
         observers[i]->update(copy);
     }
     delete frame;

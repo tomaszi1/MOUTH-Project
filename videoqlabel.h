@@ -10,7 +10,7 @@ class VideoQLabel : public QLabel, public VideoReceiver
 {
     Q_OBJECT
 signals:
-    void mousePressed(const QPoint& pos,const QSize& size);
+    void mousePressed(const QPoint pos,const QSize size);
 public:
     VideoQLabel(QWidget *parent);
     void setActiveClick(bool value);

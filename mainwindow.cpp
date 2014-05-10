@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "camera.h"
 #include "videoqlabel.h"
+#include "calibration.h"
+#include "frame_holder.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -65,9 +67,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
 
+    // calibration measures
+    calibration = new Calibration();
+    FrameHolder *holder = new FrameHolder();
+    calibration->setFrameHolder(holder);
+
     dispatcher = new VideoDispatcher();
     dispatcher->attach(videoBox);
+    dispatcher->attach(holder);
     initiateTimer();
+    connect(videoBox,SIGNAL(mousePressed(QPoint,QSize)),calibration,SLOT(receiveClickedPixel(QPoint,QSize)));
+    calibration->setState(GATHERING);
 }
 
 // Destructor:
