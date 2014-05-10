@@ -1,5 +1,11 @@
 #include "mainwindow.h"
+<<<<<<< HEAD
 //#include "ui_mainwindow.h"
+=======
+#include "ui_mainwindow.h"
+#include "camera.h"
+#include "videoqlabel.h"
+>>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -9,6 +15,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QHBoxLayout>
+<<<<<<< HEAD
 #include <QTabWidget>
 #include <QAction>
 #include <QMenuBar>
@@ -16,6 +23,11 @@
 #include <QWidget>
 #include <QApplication>
 
+=======
+#include <QTimer>
+#include <QCloseEvent>
+#include <QGridLayout>
+>>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
 
 // Constructor:
 //*********************************************************************************************************************
@@ -25,15 +37,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     createMenu();
 
     // main layout:
-    QWidget *centralWidget = new QWidget;
+    QWidget *centralWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout;
     centralWidget->setLayout(mainLayout);
     // ui->setupUi(this);
 
 
     // left box:
-    QWidget *leftBox = new QWidget;
-    QVBoxLayout *leftBoxLayout = new QVBoxLayout;
+    QWidget *leftBox = new QWidget(this);
+    QVBoxLayout *leftBoxLayout = new QVBoxLayout(leftBox);
     leftBox->setLayout(leftBoxLayout);
     leftBox->setStyleSheet("background-color:#e9e9e9;");
     //createLeftBoxLayout(leftBoxLayout);
@@ -50,7 +62,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     //right box:
     QWidget *rightBox = new QWidget;
-    QVBoxLayout *rightBoxLayout = new QVBoxLayout;
+
+    // video box QLabel
+    VideoQLabel *videoBox = new VideoQLabel(rightBox);
+    videoBox->setActiveClick(true);
+    videoBox->setText("Video stream window");
+
+    QGridLayout *rightBoxLayout = new QGridLayout;
+    rightBoxLayout->addWidget(videoBox);
     rightBox->setLayout(rightBoxLayout);
     rightBox->setStyleSheet("background-color:#e9e9e9;");
 
@@ -58,9 +77,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainLayout->addWidget(leftBox,1);
     mainLayout->addWidget(rightBox,3);
 
-
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
+
+    dispatcher = new VideoDispatcher();
+    dispatcher->attach(videoBox);
+    initiateTimer();
 }
 
 // Destructor:
@@ -79,8 +101,8 @@ void MainWindow::createMenu(){
     connect(loadAction, SIGNAL(triggered()), this, SLOT(load()));
     connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
-    QMenuBar *menuBar = new QMenuBar;
-    QMenu *menuFile = new QMenu("File");
+    QMenuBar *menuBar = new QMenuBar(this);
+    QMenu *menuFile = new QMenu("File",menuBar);
     menuBar->addMenu(menuFile);
     menuFile->addAction(saveAction);
     menuFile->addAction(loadAction);
@@ -143,7 +165,17 @@ QGroupBox* MainWindow::createMouseBox(){
     return algorithmMouseBox;
 }
 
+void MainWindow::initiateTimer(){
+    paintTimer = new QTimer(this);
+    connect(paintTimer,SIGNAL(timeout()),dispatcher,SLOT(dispatchFrame()));
+    paintTimer->start(1000/DEFAULT_FPS);
+}
 
+void MainWindow::closeEvent(QCloseEvent *event){
+    quit();
+}
+
+<<<<<<< HEAD
 void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
 
   /*  QTabWidget *tabs = new QtabWidget();
@@ -152,6 +184,12 @@ void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
     QWidget *Calibration = new Qwidget();*/
 }
 
+=======
+void MainWindow::cleanUp(){
+    paintTimer->stop();
+    delete dispatcher;
+}
+>>>>>>> 79701290f3ba9f73a3158cdfd67b27bac09313c1
 
 // Slots:
 //*********************************************************************************************************************
@@ -164,13 +202,15 @@ void MainWindow::load(){
 }
 
 void MainWindow::quit(){
-    QMessageBox messageBox;
-    messageBox.setWindowTitle("Mouth");
-    messageBox.setText(tr("Do you really want to quit?"));
-    messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    messageBox.setDefaultButton(QMessageBox::No);
-    if (messageBox.exec() == QMessageBox::Yes)
+    /*QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Mouth", "Do you really want to quit?",
+                                    QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes){
+        cleanUp();
         qApp->quit();
+    }*/
+    cleanUp();
+    qApp->quit();
 }
 
 // butons:
