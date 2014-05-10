@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+//#include "ui_mainwindow.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -9,6 +9,13 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QTabWidget>
+#include <QAction>
+#include <QMenuBar>
+#include <QMenu>
+#include <QWidget>
+#include <QApplication>
+
 
 // Constructor:
 //*********************************************************************************************************************
@@ -29,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QVBoxLayout *leftBoxLayout = new QVBoxLayout;
     leftBox->setLayout(leftBoxLayout);
     leftBox->setStyleSheet("background-color:#e9e9e9;");
+    //createLeftBoxLayout(leftBoxLayout);
 
     QGroupBox *algorithmStartBox = createAlgorithmBox();
     leftBoxLayout->addWidget(algorithmStartBox);
@@ -135,6 +143,14 @@ QGroupBox* MainWindow::createMouseBox(){
     return algorithmMouseBox;
 }
 
+
+void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
+
+  /*  QTabWidget *tabs = new QtabWidget();
+
+    QWidget *primary = new QWidget();
+    QWidget *Calibration = new Qwidget();*/
+}
 
 
 // Slots:
