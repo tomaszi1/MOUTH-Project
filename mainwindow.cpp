@@ -35,7 +35,6 @@ const int MainWindow::DEFAULT_FPS = 5;
 //*********************************************************************************************************************
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-
     createMenu();
 
     // main layout:
@@ -48,15 +47,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // left box:
     //**************************************************
     QWidget *leftBox = new QWidget(centralWidget);
+    leftBox->setMinimumWidth(230);
 
     // create tabPanel:
     tabPanel = new QTabWidget(leftBox);
 
+    // create Calibration Tab:
+    createCalibrationTab(leftBox);
+
     // create General Tab:
     createGeneralTab(leftBox);
 
-    // create Calibration Tab:
-    createCalibrationTab(leftBox);
+
 
 
     //right box:
@@ -136,7 +138,7 @@ void MainWindow::createGeneralTab(QWidget *parent)
     // create general page content:
 
     //create algorithm box:
-    QGroupBox *algorithmBox = new QGroupBox("Algorithm:");
+    QGroupBox *algorithmBox = new QGroupBox("Algorithm:",generalTab);
     startButton = new QPushButton("Start");
     connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
     stopButton = new QPushButton("End");
@@ -147,10 +149,14 @@ void MainWindow::createGeneralTab(QWidget *parent)
     formLayoutAlgorithm->addRow("Start algorithm:", startButton);
     formLayoutAlgorithm->addRow("Stop algorithm:",  stopButton);
 
+    // add algorithmBox to mainLayout
     generalTabLayout->addWidget(algorithmBox);
 
+
+
+
     // create mouseBox:
-    QGroupBox *mouseBox = new QGroupBox("Mouse:");
+    QGroupBox *mouseBox = new QGroupBox("Mouse:",generalTab);
     QFormLayout *formLayoutMouse = new QFormLayout();
     mouseBox->setLayout(formLayoutMouse);
 
@@ -171,13 +177,27 @@ void MainWindow::createGeneralTab(QWidget *parent)
     speedSlider->setValue(50);
     speedSlider->setTickPosition(QSlider::TicksBelow);
 
-
     formLayoutMouse->addRow("Smoothness:", smoothnessSlider);
     formLayoutMouse->addRow("Speed:", speedSlider);
     formLayoutMouse->addRow("Reposition Cursor:", repositionButton);
     formLayoutMouse->addRow("Reset settings:", resetButton);
 
+    // add mousebox to main layout
     generalTabLayout->addWidget(mouseBox);
+
+
+    // create saveFileBox:
+/*
+    QGroupBox *saveFileBox = new QGroupBox("Save: ", generalTab);
+    QVBoxLayout *mainSaveBoxLayout = new QVBoxLayout();
+    saveFileBox->setLayout(mainSaveBoxLayout);
+    QWidget *saveLabelBox = new QWidget();
+    QHBoxLayout *saveLabelLayout= new QHBoxLayout();
+    saveLabelBox->setLayout(saveLabelLayout);
+    QLabel *saveLabel= new QLabel("Save as: ");
+    QTextEdit *saveFileText = new QTextEdit();
+*/
+
 
 
     // add general page to tabPanel:
