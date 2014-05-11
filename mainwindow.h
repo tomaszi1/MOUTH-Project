@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include "camera.h"
 #include "video_dispatch.h"
+#include "calibration.h"
 
 namespace Ui {
 class MainWindow;
@@ -77,6 +78,8 @@ private:
 
     // dispatches video from camera to listeners
     VideoDispatcher *dispatcher;
+
+    Calibration *calibration;
 
 private slots:
     void save();
