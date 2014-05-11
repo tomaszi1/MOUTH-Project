@@ -9,7 +9,7 @@
 #include "pixel.h"
 
 enum CalibrationState{
-    OFF, GATHERING
+    OFF, IN_PROGRESS, DONE
 };
 
 class Calibration : public QObject
@@ -24,6 +24,12 @@ public slots:
 private:
     CalibrationState state;
     std::vector<Pixel> clickedPixels;
+    uchar lowerVBound;
+    uchar higherVBound;
+    uchar lowerSBound;
+    uchar higherSBound;
+    uchar lowerHBound;
+    uchar higherHBound;
     FrameHolder *frameHolder;
 };
 

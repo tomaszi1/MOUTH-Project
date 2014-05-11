@@ -28,8 +28,6 @@ void VideoDispatcher::dispatchFrame(){
     if(frame==NULL || frame->empty())
         return;
 
-    cv::cvtColor(*frame,*frame,CV_BGR2RGB);
-
     cv::Mat* copy;
     for(unsigned int i=0;i<observers.size();i++){
         copy = new Mat(*frame);

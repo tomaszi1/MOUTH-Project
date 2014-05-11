@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    static const int DEFAULT_FPS = 30;
+    static const int DEFAULT_FPS;
 
 private:
     void createMenu();

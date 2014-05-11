@@ -19,9 +19,9 @@ public:
 private:
     bool activeClick;
 
+
     void update(Mat *frame);
     void mousePressEvent(QMouseEvent *event);
-
 };
 
 #endif // VIDEOQLABEL_H
