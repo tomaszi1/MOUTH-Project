@@ -24,6 +24,7 @@
 #include <QMenu>
 #include <QWidget>
 #include <QApplication>
+#include <QFormLayout>
 
 
 #include <QTimer>
@@ -47,26 +48,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // left box:
     //**************************************************
-
-
-
-
     QWidget *leftBox = new QWidget(centralWidget);
-    QVBoxLayout *leftBoxLayout = new QVBoxLayout(leftBox);
-    leftBox->setLayout(leftBoxLayout);
-    leftBox->setStyleSheet("background-color:#e9e9e9;");
 
+    // create tabPanel:
+    tabPanel = new QTabWidget(leftBox);
 
-    createLeftBoxLayout(leftBoxLayout);
+    // create General Tab:
+    createGeneralTab(leftBox);
 
-    QGroupBox *algorithmStartBox = createAlgorithmBox();
-    leftBoxLayout->addWidget(algorithmStartBox);
+    // create Calibration Tab:
+    createCalibrationTab(leftBox);
 
-    QGroupBox *calibrationBox = createCalibrationBox();
-    leftBoxLayout->addWidget(calibrationBox);
-
-    QGroupBox *mouseBox = createMouseBox();
-    leftBoxLayout->addWidget(mouseBox);
 
     //right box:
     //**************************************************
@@ -100,6 +92,11 @@ MainWindow::~MainWindow()
 {
 }
 
+
+// USER INTERFACE:
+//*********************************************************************************************************************
+
+// Create Menu:
 void MainWindow::createMenu(){
 
     saveAction = new QAction("Save", this);
@@ -120,59 +117,92 @@ void MainWindow::createMenu(){
     setMenuBar(menuBar);
 }
 
-// methods:
-//*********************************************************************************************************************
 
-QGroupBox* MainWindow::createAlgorithmBox(){
+// Create Left Panel:
+void MainWindow::createGeneralTab(QWidget *parent)
+{
+    // create general page:
+    generalTab = new QWidget(parent);
+    QVBoxLayout *generalTabLayout = new QVBoxLayout();
+    generalTab->setLayout(generalTabLayout);
 
-    QGroupBox *algorithmStartBox = new QGroupBox("Algorithm:");
+    // create general page content:
+
+    //create algorithm box:
+    QGroupBox *algorithmBox = new QGroupBox("Algorithm:");
     startButton = new QPushButton("Start");
     connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
+    stopButton = new QPushButton("End");
+    connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
+    QFormLayout *formLayoutAlgorithm = new QFormLayout();
+    algorithmBox->setLayout(formLayoutAlgorithm);
 
-    QWidget *comboWidget = new QWidget;
-    QLabel *comboLabel = new QLabel("Choose camera:");
-    QHBoxLayout *comboLayout = new QHBoxLayout;
-    camerasCombo= new QComboBox;
-    /***************************************************************
-     *
-     * Napisać kod znajdujący kamery
-     *
-     *
-     * *************************************************************/
-    camerasCombo->addItem("A");
-    camerasCombo->addItem("B");
-    camerasCombo->addItem("C");
-    comboLayout->addWidget(comboLabel);
-    comboLayout->addWidget(camerasCombo);
-    comboWidget->setLayout(comboLayout);
+    formLayoutAlgorithm->addRow("Start algorithm:", startButton);
+    formLayoutAlgorithm->addRow("Stop algorithm:",  stopButton);
 
-    stopButton = new QPushButton("Stop");
-    connect(stopButton,SIGNAL(clicked()), this, SLOT(stop()));
+    generalTabLayout->addWidget(algorithmBox);
 
-    QVBoxLayout *boxLayout = new QVBoxLayout;
-    boxLayout->addWidget(startButton);
-    boxLayout->addWidget(comboWidget);
-    boxLayout->addWidget(stopButton);
+    // create mouseBox:
+    QGroupBox *mouseBox = new QGroupBox("Mouse:");
+    QFormLayout *formLayoutMouse = new QFormLayout();
+    mouseBox->setLayout(formLayoutMouse);
 
-    algorithmStartBox->setLayout(boxLayout);
+    repositionButton = new QPushButton("Reposition");
+    connect(repositionButton, SIGNAL(clicked()), this, SLOT(reposition()));
+    resetButton = new QPushButton("Reset");
+    connect(resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    smoothnessSlider = new QSlider(Qt::Horizontal);
+    smoothnessSlider->setMinimum(0);
+    smoothnessSlider->setMaximum(100);
+    smoothnessSlider->setTickInterval(10);
+    smoothnessSlider->setValue(50);
+    smoothnessSlider->setTickPosition(QSlider::TicksBelow);
+    speedSlider = new QSlider(Qt::Horizontal);
+    speedSlider->setMinimum(0);
+    speedSlider->setMaximum(100);
+    speedSlider->setTickInterval(10);
+    speedSlider->setValue(50);
+    speedSlider->setTickPosition(QSlider::TicksBelow);
 
-    return algorithmStartBox;
+
+    formLayoutMouse->addRow("Smoothness:", smoothnessSlider);
+    formLayoutMouse->addRow("Speed:", speedSlider);
+    formLayoutMouse->addRow("Reposition Cursor:", repositionButton);
+    formLayoutMouse->addRow("Reset settings:", resetButton);
+
+    generalTabLayout->addWidget(mouseBox);
+
+
+    // add general page to tabPanel:
+    tabPanel->addTab(generalTab,"General");
 }
 
-QGroupBox* MainWindow::createCalibrationBox(){
+void MainWindow::createCalibrationTab(QWidget *parent)
+{
+    // create  calibration page:
+    calibrationTab = new QWidget(parent);
+    QVBoxLayout *calibrationMainLayout = new QVBoxLayout();
+    calibrationTab->setLayout(calibrationMainLayout);
 
-    QGroupBox *algorithmCalibrationBox = new QGroupBox("Calibration:");
+    // create calibration pagecontent:
 
+    // create camera choose Box:
 
-    return algorithmCalibrationBox;
+    QGroupBox *cameraBox = new QGroupBox("Camera: ");
+    QFormLayout *cameraFormLayout = new QFormLayout();
+    cameraBox->setLayout(cameraFormLayout);
+    switchCameraButton = new QPushButton("Switch");
+    connect(switchCameraButton,SIGNAL(clicked()),this,SLOT(switchCamera()));
+    cameraFormLayout->addRow("Switch camera:", switchCameraButton);
+    //add camera box to calibrationmainLayout:
+    calibrationMainLayout->addWidget(cameraBox);
+
+    // add calibration page to tabPanel
+    tabPanel->addTab(calibrationTab,"Calibration");
 }
 
-QGroupBox* MainWindow::createMouseBox(){
-
-    QGroupBox *algorithmMouseBox = new QGroupBox("Mouse:");
-
-    return algorithmMouseBox;
-}
+// methods:
+//*********************************************************************************************************************
 
 void MainWindow::initiateTimer(){
     paintTimer = new QTimer(this);
@@ -182,15 +212,6 @@ void MainWindow::initiateTimer(){
 
 void MainWindow::closeEvent(QCloseEvent *event){
     quit();
-}
-
-
-void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
-
-  /*  QTabWidget *tabs = new QtabWidget();
-
-    QWidget *primary = new QWidget();
-    QWidget *Calibration = new Qwidget();*/
 }
 
 
@@ -229,4 +250,21 @@ void MainWindow::start(){
 
 void MainWindow::stop(){
 
+}
+
+void MainWindow::reposition()
+{
+
+}
+
+void MainWindow::reset()
+{
+
+
+}
+
+void MainWindow::switchCamera()
+{
+    Camera *camera = Camera::getInstance();
+    camera->switchCamera();
 }

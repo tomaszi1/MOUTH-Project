@@ -25,7 +25,8 @@ public:
 
 private:
     void createMenu();
-    void createLeftBoxLayout(QVBoxLayout *layout);
+    void createGeneralTab(QWidget *parent);
+    void createCalibrationTab(QWidget *parent);
     QGroupBox* createAlgorithmBox();
     QGroupBox* createCalibrationBox();
     QGroupBox* createMouseBox();
@@ -38,10 +39,30 @@ private:
 private:
     //Ui::MainWindow *ui;
 
-    // Widgets:
+    // Widgets UI:
+    //*********************
+
+    // LeftBox:
+    QTabWidget *tabPanel;
+    QWidget *generalTab;
+    QWidget *calibrationTab;
+    // algorithm:
     QPushButton *startButton;
     QPushButton *stopButton;
-    QComboBox *camerasCombo;
+
+    // mouse:
+    QSlider *smoothnessSlider;
+    QSlider *speedSlider;
+    QPushButton *resetButton;
+    QPushButton *repositionButton;
+    // calibration:
+    QPushButton *switchCameraButton;
+
+
+
+
+
+    //***********************
 
     // settings/menu:
     QAction *saveAction;
@@ -61,10 +82,13 @@ private slots:
     void save();
     void load();
     void quit();
+    void reposition();
+    void reset();
 
     //buttons
     void start();
     void stop();
+    void switchCamera();
 
 };
 
