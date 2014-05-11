@@ -4,6 +4,7 @@
 #include "videoqlabel.h"
 #include "calibration.h"
 #include "frame_holder.h"
+#include "video_dispatch.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -13,9 +14,16 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QTabWidget>
+#include <QAction>
+#include <QMenuBar>
+#include <QMenu>
+#include <QWidget>
+#include <QApplication>
 #include <QTimer>
 #include <QCloseEvent>
 #include <QGridLayout>
+
 
 // Constructor:
 //*********************************************************************************************************************
@@ -32,10 +40,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 
     // left box:
-    QWidget *leftBox = new QWidget(this);
+    //**************************************************
+
+
+
+
+    QWidget *leftBox = new QWidget(centralWidget);
     QVBoxLayout *leftBoxLayout = new QVBoxLayout(leftBox);
     leftBox->setLayout(leftBoxLayout);
     leftBox->setStyleSheet("background-color:#e9e9e9;");
+
+
+    createLeftBoxLayout(leftBoxLayout);
 
     QGroupBox *algorithmStartBox = createAlgorithmBox();
     leftBoxLayout->addWidget(algorithmStartBox);
@@ -46,8 +62,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QGroupBox *mouseBox = createMouseBox();
     leftBoxLayout->addWidget(mouseBox);
 
-
     //right box:
+    //**************************************************
     QWidget *rightBox = new QWidget;
 
     // video box QLabel
@@ -170,10 +186,21 @@ void MainWindow::closeEvent(QCloseEvent *event){
     quit();
 }
 
+
+void MainWindow::createLeftBoxLayout(QVBoxLayout *layout){
+
+  /*  QTabWidget *tabs = new QtabWidget();
+
+    QWidget *primary = new QWidget();
+    QWidget *Calibration = new Qwidget();*/
+}
+
+
 void MainWindow::cleanUp(){
     paintTimer->stop();
     delete dispatcher;
 }
+
 
 // Slots:
 //*********************************************************************************************************************

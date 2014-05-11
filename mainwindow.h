@@ -26,6 +26,7 @@ public:
 
 private:
     void createMenu();
+    void createLeftBoxLayout(QVBoxLayout *layout);
     QGroupBox* createAlgorithmBox();
     QGroupBox* createCalibrationBox();
     QGroupBox* createMouseBox();
