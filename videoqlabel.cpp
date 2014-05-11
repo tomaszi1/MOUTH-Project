@@ -12,9 +12,10 @@ void VideoQLabel::update(Mat *frame){
     if(frame==NULL || frame->empty())
         return;
 
+    setScaledContents(true);
     QImage qimage((uchar*)(*frame).data,(*frame).cols,(*frame).rows,(*frame).step,QImage::Format_RGB888);
-    if(qimage.size()!=this->size())
-        qimage = qimage.scaled(this->size());
+    //if(qimage.size()!=this->size())
+      //  qimage = qimage.scaled(this->size());
     setPixmap(QPixmap::fromImage(qimage));
     delete frame;
 }

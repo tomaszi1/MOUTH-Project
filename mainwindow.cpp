@@ -186,7 +186,7 @@ void MainWindow::createGeneralTab(QWidget *parent)
 
 
     // create saveFileBox:
-    /*
+/*
     QGroupBox *saveFileBox = new QGroupBox("Save: ", generalTab);
     QVBoxLayout *mainSaveBoxLayout = new QVBoxLayout();
     saveFileBox->setLayout(mainSaveBoxLayout);
@@ -194,8 +194,8 @@ void MainWindow::createGeneralTab(QWidget *parent)
     QHBoxLayout *saveLabelLayout= new QHBoxLayout();
     saveLabelBox->setLayout(saveLabelLayout);
     QLabel *saveLabel= new QLabel("Save as: ");
-    QTextEdit *saveFileText = new QTextEdit();*/
-
+    QTextEdit *saveFileText = new QTextEdit();
+*/
 
 
 
