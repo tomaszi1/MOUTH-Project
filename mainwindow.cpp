@@ -230,13 +230,18 @@ void MainWindow::createCalibrationTab(QWidget *parent)
     // create calibration pagecontent:
 
     // create camera choose Box:
-
     QGroupBox *cameraBox = new QGroupBox("Camera: ");
     QFormLayout *cameraFormLayout = new QFormLayout();
     cameraBox->setLayout(cameraFormLayout);
     switchCameraButton = new QPushButton("Switch");
     connect(switchCameraButton,SIGNAL(clicked()),this,SLOT(switchCamera()));
     cameraFormLayout->addRow("Switch camera:", switchCameraButton);
+
+    // add foto option to camera:
+    fotoButton = new QPushButton("foto");
+    connect(fotoButton,SIGNAL(clicked()),this,SLOT(makeFoto()));
+    cameraFormLayout->addRow("Make foto: ", fotoButton);
+
     //add camera box to calibrationmainLayout:
     calibrationMainLayout->addWidget(cameraBox);
 
@@ -316,11 +321,17 @@ void MainWindow::reposition()
 void MainWindow::reset()
 {
 
-
 }
 
 void MainWindow::switchCamera()
 {
     Camera *camera = Camera::getInstance();
     camera->switchCamera();
+}
+
+Mat *MainWindow::makeFoto(){
+    Camera *cam = Camera::getInstance();
+
+    Mat *image = cam->read();
+    return image;
 }

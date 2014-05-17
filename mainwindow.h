@@ -59,6 +59,7 @@ private:
     QPushButton *repositionButton;
     // calibration:
     QPushButton *switchCameraButton;
+    QPushButton *fotoButton;
 
     // saveFile:
     QLineEdit *saveFileName;
@@ -97,6 +98,7 @@ private slots:
     void start();
     void stop();
     void switchCamera();
+    Mat* makeFoto();
 
 };
 
