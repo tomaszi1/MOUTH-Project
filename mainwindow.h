@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QGroupBox>
 #include <QComboBox>
+#include <QLineEdit>
 #include "camera.h"
 #include "video_dispatch.h"
 #include "calibration.h"
@@ -58,6 +59,10 @@ private:
     QPushButton *repositionButton;
     // calibration:
     QPushButton *switchCameraButton;
+
+    // saveFile:
+    QLineEdit *saveFileName;
+    QPushButton *saveButton;
 
 
 

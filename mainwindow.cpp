@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <QApplication>
 #include <QFormLayout>
+#include <QLineEdit>
 
 
 
@@ -29,6 +30,8 @@
 #include <QCloseEvent>
 #include <QGridLayout>
 
+#include "savefilethread.h"
+#include <iostream>
 
 // Constructor:
 //*********************************************************************************************************************
@@ -186,8 +189,22 @@ void MainWindow::createGeneralTab(QWidget *parent)
 
 
     // create saveFileBox:
-/*
+
     QGroupBox *saveFileBox = new QGroupBox("Save: ", generalTab);
+    QFormLayout *saveFileLayout = new QFormLayout();
+    saveFileBox->setLayout(saveFileLayout);
+
+    saveFileName = new QLineEdit();
+    saveButton = new QPushButton("Save");
+    connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
+    saveFileLayout->addRow("Name file: ", saveFileName);
+    saveFileLayout->addRow("",saveButton);
+
+    // add saveFileBox to main layout
+    generalTabLayout->addWidget(saveFileBox);
+
+
+/*
     QVBoxLayout *mainSaveBoxLayout = new QVBoxLayout();
     saveFileBox->setLayout(mainSaveBoxLayout);
     QWidget *saveLabelBox = new QWidget();
@@ -250,7 +267,20 @@ void MainWindow::cleanUp(){
 // Slots:
 //*********************************************************************************************************************
 void MainWindow::save(){
+    QString filename;
 
+    filename = saveFileName->text();
+    if(filename == "")
+    {
+        QMessageBox *msgbox = new QMessageBox();
+        msgbox->setText("The file name is empty!\n Type in the full path with file name into General->Save menu.");
+        msgbox->exec();
+    }
+    else
+    {
+        saveFileThread *thread = new saveFileThread(1, filename.toStdString());
+        thread->start();
+    }
 }
 
 void MainWindow::load(){
