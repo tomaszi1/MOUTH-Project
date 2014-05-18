@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QFormLayout>
 #include <QThread>
+#include <QLineEdit>
 #include <QTimer>
 #include <QCloseEvent>
 #include <QGridLayout>
@@ -28,6 +29,9 @@
 #include<opencv2/imgproc/imgproc.hpp>
 #include<opencv2/objdetect/objdetect.hpp>
 const int MainWindow::DEFAULT_FPS = 10;
+
+#include "savefilethread.h"
+#include <iostream>
 
 // Constructor:
 //*********************************************************************************************************************
@@ -90,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         throw "fuck";
     }
 
-    // calibration measures
     dispatcher = new VideoDispatcher();
     dispatcher->attach(videoBox);
     dispatcher->setPreprocessor(*new MouthClassifierProcessor(*faceClassifier,*mouthClassifier));
@@ -189,8 +192,22 @@ void MainWindow::createGeneralTab(QWidget *parent)
 
 
     // create saveFileBox:
-/*
+
     QGroupBox *saveFileBox = new QGroupBox("Save: ", generalTab);
+    QFormLayout *saveFileLayout = new QFormLayout();
+    saveFileBox->setLayout(saveFileLayout);
+
+    saveFileName = new QLineEdit();
+    saveButton = new QPushButton("Save");
+    connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
+    saveFileLayout->addRow("Name file: ", saveFileName);
+    saveFileLayout->addRow("",saveButton);
+
+    // add saveFileBox to main layout
+    generalTabLayout->addWidget(saveFileBox);
+
+
+/*
     QVBoxLayout *mainSaveBoxLayout = new QVBoxLayout();
     saveFileBox->setLayout(mainSaveBoxLayout);
     QWidget *saveLabelBox = new QWidget();
@@ -216,13 +233,18 @@ void MainWindow::createCalibrationTab(QWidget *parent)
     // create calibration pagecontent:
 
     // create camera choose Box:
-
     QGroupBox *cameraBox = new QGroupBox("Camera: ");
     QFormLayout *cameraFormLayout = new QFormLayout();
     cameraBox->setLayout(cameraFormLayout);
     switchCameraButton = new QPushButton("Switch");
     connect(switchCameraButton,SIGNAL(clicked()),this,SLOT(switchCamera()));
     cameraFormLayout->addRow("Switch camera:", switchCameraButton);
+
+    // add foto option to camera:
+    fotoButton = new QPushButton("foto");
+    connect(fotoButton,SIGNAL(clicked()),this,SLOT(makeFoto()));
+    cameraFormLayout->addRow("Make foto: ", fotoButton);
+
     //add camera box to calibrationmainLayout:
     calibrationMainLayout->addWidget(cameraBox);
 
@@ -253,7 +275,20 @@ void MainWindow::cleanUp(){
 // Slots:
 //*********************************************************************************************************************
 void MainWindow::save(){
+    QString filename;
 
+    filename = saveFileName->text();
+    if(filename == "")
+    {
+        QMessageBox *msgbox = new QMessageBox();
+        msgbox->setText("The file name is empty!\n Type in the full path with file name into General->Save menu.");
+        msgbox->exec();
+    }
+    else
+    {
+        saveFileThread *thread = new saveFileThread(1, filename.toStdString());
+        thread->start();
+    }
 }
 
 void MainWindow::load(){
@@ -294,4 +329,11 @@ void MainWindow::switchCamera()
 {
     Camera *camera = Camera::getInstance();
     camera->switchCamera();
+}
+
+Mat *MainWindow::makeFoto(){
+    Camera *cam = Camera::getInstance();
+
+    Mat *image = cam->read();
+    return image;
 }

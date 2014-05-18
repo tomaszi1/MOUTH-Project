@@ -14,6 +14,8 @@ public:
     bool switchCamera();
     bool isOpened();
     void close();
+    double getWidth();
+    double getHeight();
 
 private:
     Camera();

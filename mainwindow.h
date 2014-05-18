@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QGroupBox>
 #include <QComboBox>
+#include <QLineEdit>
 #include "camera.h"
 #include "video_dispatch.h"
 #include<opencv2/objdetect/objdetect.hpp>
@@ -58,6 +59,11 @@ private:
     QPushButton *repositionButton;
     // calibration:
     QPushButton *switchCameraButton;
+    QPushButton *fotoButton;
+
+    // saveFile:
+    QLineEdit *saveFileName;
+    QPushButton *saveButton;
 
 
 
@@ -93,6 +99,7 @@ private slots:
     void start();
     void stop();
     void switchCamera();
+    Mat* makeFoto();
 
 };
 

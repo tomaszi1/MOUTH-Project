@@ -41,3 +41,11 @@ Camera* Camera::getInstance(){
     static Camera instance;
     return &instance;
 }
+
+double Camera::getHeight(){
+    return currentCamera.get(CV_CAP_PROP_FRAME_HEIGHT);
+}
+
+double Camera::getWidth(){
+    return currentCamera.get(CV_CAP_PROP_FRAME_WIDTH);
+}
