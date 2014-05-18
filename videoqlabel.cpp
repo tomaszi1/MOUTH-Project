@@ -4,22 +4,19 @@
 #include <QSize>
 #include <QDebug>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <QPainter>
 VideoQLabel::VideoQLabel(QWidget *parent) : QLabel(parent)
 {
     activeClick = false;
+    connect(this,SIGNAL(updateGuiSignal()),this,SLOT(updateGuiSlot()));
+    setScaledContents(true);
+    setMouseTracking(true);
 }
 
 void VideoQLabel::update(Mat *frame){
     if(frame==NULL || frame->empty())
         return;
-    cv::cvtColor(*frame,*frame,CV_BGR2RGB);
-    cv::GaussianBlur(*frame,*frame,cv::Size(5,5),0);
-    //cv::medianBlur(*frame,*frame,5);
-
-    setScaledContents(true);
     QImage qimage((uchar*)(*frame).data,(*frame).cols,(*frame).rows,(*frame).step,QImage::Format_RGB888);
-    //if(qimage.size()!=this->size())
-      //  qimage = qimage.scaled(this->size());
     setPixmap(QPixmap::fromImage(qimage));
     delete frame;
 }
@@ -31,6 +28,14 @@ void VideoQLabel::mousePressEvent(QMouseEvent *event){
     const QSize size = this->size();
     qDebug() << pos << " " << size;
     emit mousePressed(pos,size);
+}
+
+void VideoQLabel::mouseMoveEvent(QMouseEvent *event)
+{
+    const QPoint pos = event->pos();
+    const QSize size = this->size();
+    qDebug() << pos << " " << size;
+    emit mouseMoved(pos,size);
 }
 
 void VideoQLabel::setActiveClick(bool value){

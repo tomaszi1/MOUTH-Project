@@ -6,6 +6,7 @@
 
 VideoDispatcher::VideoDispatcher(){
     camera = Camera::getInstance();
+    preprocessor=NULL;
 }
 
 VideoDispatcher::~VideoDispatcher(){
@@ -13,20 +14,47 @@ VideoDispatcher::~VideoDispatcher(){
 }
 
 void VideoDispatcher::attach(VideoReceiver *obs){
+    dispatchGuard.lock();
     observers.push_back(obs);
+    dispatchGuard.unlock();
 }
 
 void VideoDispatcher::remove(VideoReceiver *obs){
+    dispatchGuard.lock();
     observers.erase(std::remove(observers.begin(),observers.end(),obs),observers.end());
+    dispatchGuard.unlock();
+}
+
+void VideoDispatcher::removeAll()
+{
+    dispatchGuard.lock();
+    observers.clear();
+    dispatchGuard.unlock();
+}
+
+void VideoDispatcher::setPreprocessor(ImageProcessor &preproc)
+{
+    dispatchGuard.lock();
+    preprocessor = &preproc;
+    dispatchGuard.unlock();
 }
 
 void VideoDispatcher::dispatchFrame(){
-    if(observers.empty())
-        return;
+    dispatchGuard.lock();
+    cv::Mat* frame;
+    if(observers.empty()){
+        goto finalize;
+    }
+    frame = camera->read();
+    if(frame==NULL){
+        goto finalize;
+    }else if(frame->empty()){
+        delete frame;
+        goto finalize;
+    }
 
-    cv::Mat* frame = camera->read();
-    if(frame==NULL || frame->empty())
-        return;
+    if(preprocessor!=NULL)
+        preprocessor->process(*frame);
 
     cv::Mat* copy;
     for(unsigned int i=0;i<observers.size();i++){
@@ -34,4 +62,6 @@ void VideoDispatcher::dispatchFrame(){
         observers[i]->update(copy);
     }
     delete frame;
+    finalize:
+    dispatchGuard.unlock();
 }

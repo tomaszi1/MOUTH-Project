@@ -2,9 +2,8 @@
 #include "ui_mainwindow.h"
 #include "camera.h"
 #include "videoqlabel.h"
-#include "calibration.h"
-#include "frame_holder.h"
 #include "video_dispatch.h"
+#include "imageprocessor.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -21,15 +20,14 @@
 #include <QWidget>
 #include <QApplication>
 #include <QFormLayout>
-
-
-
-
+#include <QThread>
 #include <QTimer>
 #include <QCloseEvent>
 #include <QGridLayout>
-
-const int MainWindow::DEFAULT_FPS = 5;
+#include <opencv2/core/core.hpp>
+#include<opencv2/imgproc/imgproc.hpp>
+#include<opencv2/objdetect/objdetect.hpp>
+const int MainWindow::DEFAULT_FPS = 10;
 
 // Constructor:
 //*********************************************************************************************************************
@@ -82,17 +80,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // set central widget of QMainWindow
     setCentralWidget(centralWidget);
 
-    // calibration measures
-    calibration = new Calibration();
-    FrameHolder *holder = new FrameHolder();
-    calibration->setFrameHolder(holder);
+    //cascade
+    mouthClassifier = new cv::CascadeClassifier("C:/haarcascade_mcs_mouth.xml");
+    if(mouthClassifier->empty()){
+        throw "fuck";
+    }
+    faceClassifier = new cv::CascadeClassifier("C:/haarcascade_frontalface_default.xml");
+    if(faceClassifier->empty()){
+        throw "fuck";
+    }
 
+    // calibration measures
     dispatcher = new VideoDispatcher();
     dispatcher->attach(videoBox);
-    dispatcher->attach(holder);
+    dispatcher->setPreprocessor(*new MouthClassifierProcessor(*faceClassifier,*mouthClassifier));
     initiateTimer();
-    connect(videoBox,SIGNAL(mousePressed(QPoint,QSize)),calibration,SLOT(receiveClickedPixel(QPoint,QSize)));
-    calibration->setState(IN_PROGRESS);
 }
 
 // Destructor:
@@ -272,7 +274,6 @@ void MainWindow::quit(){
 
 // butons:
 void MainWindow::start(){
-
 }
 
 void MainWindow::stop(){
@@ -286,7 +287,6 @@ void MainWindow::reposition()
 
 void MainWindow::reset()
 {
-
 
 }
 

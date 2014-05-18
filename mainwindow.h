@@ -9,7 +9,7 @@
 #include <QComboBox>
 #include "camera.h"
 #include "video_dispatch.h"
-#include "calibration.h"
+#include<opencv2/objdetect/objdetect.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -79,7 +79,8 @@ private:
     // dispatches video from camera to listeners
     VideoDispatcher *dispatcher;
 
-    Calibration *calibration;
+    cv::CascadeClassifier *mouthClassifier;
+    cv::CascadeClassifier *faceClassifier;
 
 private slots:
     void save();
