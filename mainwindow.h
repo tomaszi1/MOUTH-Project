@@ -61,6 +61,9 @@ private:
     QPushButton *switchCameraButton;
     QPushButton *fotoButton;
 
+    QLineEdit *maskLowerBound;
+    QLineEdit *maskUpperBound;
+
     // saveFile:
     QLineEdit *saveFileName;
     QPushButton *saveButton;

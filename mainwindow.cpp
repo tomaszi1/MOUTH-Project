@@ -85,11 +85,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(centralWidget);
 
     //cascade
-    mouthClassifier = new cv::CascadeClassifier("C:/haarcascade_mcs_mouth.xml");
+    mouthClassifier = new cv::CascadeClassifier("D:\\INTERFEJSY_MOUTH\\haarcascade_mcs_mouth.xml");
     if(mouthClassifier->empty()){
         throw "fuck";
     }
-    faceClassifier = new cv::CascadeClassifier("C:/haarcascade_frontalface_default.xml");
+    faceClassifier = new cv::CascadeClassifier("D:\\INTERFEJSY_MOUTH\\haarcascade_frontalface_default.xml");
     if(faceClassifier->empty()){
         throw "fuck";
     }
@@ -232,7 +232,7 @@ void MainWindow::createCalibrationTab(QWidget *parent)
 
     // create calibration pagecontent:
 
-    // create camera choose Box:
+    // create camera Box:
     QGroupBox *cameraBox = new QGroupBox("Camera: ");
     QFormLayout *cameraFormLayout = new QFormLayout();
     cameraBox->setLayout(cameraFormLayout);
@@ -247,6 +247,22 @@ void MainWindow::createCalibrationTab(QWidget *parent)
 
     //add camera box to calibrationmainLayout:
     calibrationMainLayout->addWidget(cameraBox);
+
+    // create Mask Box:
+
+    QGroupBox *maskBox = new QGroupBox("Mask: ");
+    QFormLayout *maskFormLayout = new QFormLayout();
+    maskBox->setLayout(maskFormLayout);
+    maskLowerBound = new QLineEdit();
+    maskLowerBound->setText("0");
+    maskUpperBound = new QLineEdit();
+    maskUpperBound->setText("0");
+    maskFormLayout->addRow("Lower mask bound:", maskLowerBound);
+    maskFormLayout->addRow("Upper mask bound:", maskUpperBound);
+
+    // add mask box to calibrationMainLayout
+    calibrationMainLayout->addWidget(maskBox);
+
 
     // add calibration page to tabPanel
     tabPanel->addTab(calibrationTab,"Calibration");
